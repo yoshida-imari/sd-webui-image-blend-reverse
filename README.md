@@ -3,7 +3,7 @@
 
 ## English
 
-ImageBlendReverse is an extension for Stable Diffusion WebUI that enables reverse-engineering of blended images, separating them into component layers.
+ImageBlendReverse is an extension for Stable Diffusion WebUI that can reverse-engineer blended images created from line art and base colors, separating them into component layers.
 
 ### Features
 
@@ -35,12 +35,13 @@ Follow these steps to install the ImageBlendReverse extension for Stable Diffusi
 
 9. Once the WebUI is back up, you should see a new tab named "ImageBlendReverse" in the interface.
 
+Some of the processing methods are based on the source code from https://gist.github.com/tori29umai0123/4e7781a4820727ca74e5491d67a6dff3.
 
 ---
 
 ## 日本語
 
-ImageBlendReverseは、Stable Diffusion WebUIの拡張機能で、ブレンドされた画像をリバースエンジニアリングし、コンポーネントレイヤーに分離することができます。
+ImageBlendReverseは、Stable Diffusion WebUIの拡張機能で、線画とベースカラーからブレンドされた画像をリバースエンジニアリングし、コンポーネントレイヤーに分離することができます。
 
 ### 機能
 
@@ -73,3 +74,6 @@ Stable Diffusion WebUIにImageBlendReverse拡張機能をインストールす�
 8. Stable Diffusion WebUIを完全に再起動します。これには、ターミナルやコマンドプロンプトウィンドウを閉じて再度開く作業も含まれます。ターミナルに馴染みがない場合は、単にコンピューターを再起動してください。
 
 9. WebUIが再起動したら、インターフェースに"ImageBlendReverse"という新しいタブが表示されているはずです。
+
+一部の処理は https://gist.github.com/tori29umai0123/4e7781a4820727ca74e5491d67a6dff3 のソースコードを参考にしています。
+
