@@ -1,6 +1,8 @@
 # sd-webui-image-blend-reverse
 [English](#english) | [日本語](#日本語)
 
+![image](https://github.com/user-attachments/assets/7995cb80-d916-4663-a80c-12a8fa02af31)
+
 ## English
 
 ImageBlendReverse is an extension for Stable Diffusion WebUI that can reverse-engineer blended images created from line art and base colors, separating them into component layers.
