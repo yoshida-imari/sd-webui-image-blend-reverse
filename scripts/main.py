@@ -52,9 +52,9 @@ def on_ui_tabs():
             basecolor = basecolor.convert('RGBA')
             lineart = lineart.convert('L')
 
-            # 画像のサイズを統一
-            basecolor = basecolor.resize(blended.size)
-            lineart = lineart.resize(blended.size)
+            # 画像のサイズを統一(生成画像はモデル都合でサイズが決まるため、baseColorを基準とする)
+            blended = basecolor.resize(basecolor.size)
+            lineart = lineart.resize(basecolor.size)
 
             # 処理の実行
             post_line_removal = process_post_line_removal(blended, lineart)

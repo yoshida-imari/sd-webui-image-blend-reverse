@@ -229,27 +229,3 @@ def inverse_screen_blend(blended, known):
     result_array = np.dstack((result_array, original_alpha * 255))
 
     return Image.fromarray(result_array.astype(np.uint8))
-
-# def process_images():
-#     # 画像を読み込む
-#     blended_image = Image.open('result.png').convert('RGB')
-#     known_image  = Image.open('basecolor.png').convert('RGBA')
-#     lineart = Image.open('line.png').convert('L')
-#
-#     ## 画像のサイズを揃える
-#     known_image = known_image.resize(blended_image.size)
-#     lineart = lineart.resize(blended_image.size)
-#
-#     # 線画を除去（仮にマスクを全画像に適用すると仮定）
-#     post_line_removal_image = process_post_line_removal(blended_image, lineart)
-#
-#
-#     # 逆算を実行
-#     post_line_removal_image = convert_rgb_to_rgba(post_line_removal_image)
-#     result_image_multiply = inverse_multiply_blend(post_line_removal_image, known_image)
-#     result_image_screen = inverse_screen_blend(post_line_removal_image, known_image)
-#
-#     # 結果を保存
-#     post_line_removal_image.save("post_line_removal_image.png")
-#     result_image_multiply.save('inverse_multiply_result.png')
-#     result_image_screen.save('inverse_screen_result.png')
