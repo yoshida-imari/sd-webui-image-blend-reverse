@@ -18,7 +18,8 @@ from image_blend_reverse import (
     convert_rgb_to_rgba,
     inverse_multiply_blend,
     inverse_screen_blend,
-    create_psd
+    create_psd,
+    denoise_image
 )
 
 def on_ui_tabs():
@@ -33,6 +34,9 @@ def on_ui_tabs():
 
         with gr.Row():
             reference_latest_button = gr.Button("Reference Latest Generated Image")
+
+        with gr.Row():
+            denoise_strength = gr.Slider(minimum=0, maximum=30, step=1, value=10, label="Denoise Strength (Multiply Result and Screen Result): A value of 0 is ineffective")
 
         with gr.Row():
             process_button = gr.Button("Process Images")
@@ -50,7 +54,7 @@ def on_ui_tabs():
         # ダウンロードリンクを表示するためのHTML要素
         download_link = gr.HTML()
 
-        def process_images(blended, basecolor, lineart):
+        def process_images(blended, basecolor, lineart, denoise_strength=10):
             if not all([blended, basecolor, lineart]):
                 return [gr.Image.update(value=None), gr.Image.update(value=None)]
 
@@ -68,6 +72,11 @@ def on_ui_tabs():
             post_line_removal = convert_rgb_to_rgba(post_line_removal)
             result_multiply = inverse_multiply_blend(post_line_removal, basecolor)
             result_screen = inverse_screen_blend(post_line_removal, basecolor)
+
+            # ノイズ除去
+            if denoise_strength > 0:
+                result_multiply = denoise_image(result_multiply, denoise_strength)
+                result_screen = denoise_image(result_screen, denoise_strength)
 
             # 結果をグローバル変数に保存
             global processed_images
@@ -177,9 +186,10 @@ def on_ui_tabs():
             else:
                 return gr.Image.update(value=None)
 
+
         process_button.click(
             fn=process_images,
-            inputs=[blended_image, basecolor_image, lineart_image],
+            inputs=[blended_image, basecolor_image, lineart_image, denoise_strength],
             outputs=[result_multiply_image, result_screen_image]
         )
 

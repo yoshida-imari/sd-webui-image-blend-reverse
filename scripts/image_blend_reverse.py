@@ -13,6 +13,23 @@ import cv2
 import pytoshop
 from pytoshop import layers, enums
 
+def denoise_image(image, strength=10):
+    # PIL画像をnumpy配列に変換
+    img_array = np.array(image)
+    
+    # アルファチャンネルを分離
+    rgb = img_array[:,:,:3]
+    alpha = img_array[:,:,3]
+    
+    # RGBチャンネルにのみノイズ除去を適用
+    denoised_rgb = cv2.fastNlMeansDenoisingColored(rgb, None, strength, strength, 7, 21)
+    
+    # ノイズ除去されたRGBと元のアルファチャンネルを再結合
+    denoised = np.dstack((denoised_rgb, alpha))
+    
+    # PIL画像に戻す
+    return Image.fromarray(denoised, 'RGBA')
+
 def create_psd(base_color, inverse_multiply, inverse_screen, lineart, output_psd_path):
     # 白紙のPSDファイルを作る
     psd = pytoshop.core.PsdFile(num_channels=4, height=base_color.height, width=base_color.width)
