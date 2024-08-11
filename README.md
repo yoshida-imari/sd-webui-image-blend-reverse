@@ -1,7 +1,7 @@
 # sd-webui-image-blend-reverse
 [English](#english) | [日本語](#日本語)
 
-![image](https://github.com/user-attachments/assets/7995cb80-d916-4663-a80c-12a8fa02af31)
+![image](https://github.com/user-attachments/assets/f4fd4db2-e026-4523-af18-bbea02c9f98a)
 
 ## English
 
