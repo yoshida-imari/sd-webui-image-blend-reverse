@@ -1,5 +1,8 @@
 import sys
 import os
+import tempfile
+import base64
+import time
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
@@ -8,7 +11,6 @@ import gradio as gr
 from modules import script_callbacks, shared, images
 from PIL import Image
 import numpy as np
-import tempfile
 import glob
 
 from image_blend_reverse import (
@@ -40,9 +42,13 @@ def on_ui_tabs():
             result_screen_image = gr.Image(label="Screen Result", elem_id="screen_result", height=512, width=512)
 
         with gr.Row():
-            create_psd_button = gr.Button("Create and Download PSD")
+            create_psd_button = gr.Button("Create PSD")
 
-        psd_output = gr.File(label="PSD File")
+        # 進行状況表示用のコンポーネント
+        progress = gr.Textbox(label="Progress", value="")
+
+        # ダウンロードリンクを表示するためのHTML要素
+        download_link = gr.HTML()
 
         def process_images(blended, basecolor, lineart):
             if not all([blended, basecolor, lineart]):
@@ -75,26 +81,71 @@ def on_ui_tabs():
             # 両方の結果を返す
             return [result_multiply, result_screen]
 
-        def create_and_download_psd():
+        def create_and_prepare_download(progress=gr.Progress()):
             global processed_images
             if 'processed_images' not in globals():
-                print("Error: processed_images not found in globals")
-                return None
+                print("エラー: グローバル変数にprocessed_imagesが見つかりません")
+                return None, "Error: processed_images not found"
 
-            # PSDファイルを一時ファイルとして作成
-            with tempfile.NamedTemporaryFile(delete=False, suffix='.psd') as temp_file:
-                temp_filename = temp_file.name
+            progress(0, desc="Starting PSD creation")
+            
+            with tempfile.TemporaryDirectory() as temp_dir:
+                temp_file_path = os.path.join(temp_dir, 'temp_output.psd')
+                
+                progress(0.2, desc="Creating PSD file")
                 create_psd(
                     processed_images['basecolor'],
                     processed_images['multiply'],
                     processed_images['screen'],
                     processed_images['lineart'],
-                    temp_filename
+                    temp_file_path
                 )
 
-            print(f"PSD file created: {temp_filename}")
+                progress(0.6, desc="PSD file created, preparing for download")
+                print(f"PSDファイルが作成されました: {temp_file_path}")
 
-            return temp_filename
+                with open(temp_file_path, 'rb') as file:
+                    file_content = file.read()
+
+            progress(0.8, desc="Encoding file content")
+            file_content_b64 = base64.b64encode(file_content).decode()
+            
+            progress(0.9, desc="Generating download link")
+            download_html = f"""
+                <style>
+                    .download-button-container {{
+                        width: 100%;
+                        padding: 10px;
+                        box-sizing: border-box;
+                    }}
+                    .download-button {{
+                        display: block;
+                        width: 100%;
+                        padding: 2vmin 4vmin;
+                        font-size: 2vmin;
+                        background-color: #4CAF50;
+                        color: white;
+                        text-decoration: none;
+                        border-radius: 1vmin;
+                        transition: background-color 0.3s;
+                        text-align: center;
+                        box-sizing: border-box;
+                    }}
+                    .download-button:hover {{
+                        background-color: #45a049;
+                    }}
+                </style>
+                <div class="download-button-container">
+                    <a href="data:application/octet-stream;base64,{file_content_b64}" 
+                    download="output.psd" 
+                    class="download-button">
+                        Download PSD
+                    </a>
+                </div>
+            """
+            
+            progress(1.0, desc="Download link ready")
+            return download_html, "PSD file created. Click the link to download."
 
         def get_latest_image():           
             folders = [
@@ -133,9 +184,9 @@ def on_ui_tabs():
         )
 
         create_psd_button.click(
-            fn=create_and_download_psd,
+            fn=create_and_prepare_download,
             inputs=[],
-            outputs=[psd_output]
+            outputs=[download_link, progress]
         )
 
         reference_latest_button.click(
