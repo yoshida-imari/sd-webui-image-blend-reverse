@@ -231,20 +231,19 @@ def detect_unchanged_pixels(known_array, blended_array, mode='multiply'):
     elif mode == 'screen':
         return blended_luminance < known_luminance
 
-# 乗算の逆算
-def inverse_multiply_blend(blended, known):
+def inverse_multiply_blend(blended, base_color):
     blended_array = np.array(blended, dtype=np.float32)
-    known_array = np.array(known, dtype=np.float32)
+    base_color_array = np.array(base_color, dtype=np.float32)
 
     # 0による除算を防ぐために、小さな値を加える
-    zero_mask = (known_array[:, :, 0:3] == 0)
-    known_array[:, :, 0:3][zero_mask] = np.finfo(float).eps
+    zero_mask = (base_color_array[:, :, 0:3] == 0)
+    base_color_array[:, :, 0:3][zero_mask] = np.finfo(float).eps
 
-    original_array = (blended_array[:, :, 0:3] * 255 / known_array[:, :, 0:3]).clip(0, 255)
+    original_array = (blended_array[:, :, 0:3] * 255 / base_color_array[:, :, 0:3]).clip(0, 255)
     original_alpha = blended_array[:, :, 3]  # アルファチャンネルを保持
 
     # 未使用ピクセルを透明にするためのマスク
-    unchanged_mask = detect_unchanged_pixels(known_array, blended_array, mode='multiply')
+    unchanged_mask = detect_unchanged_pixels(base_color_array, blended_array, mode='multiply')
     original_array[unchanged_mask] = [0, 0, 0]
     original_alpha[unchanged_mask] = 0
 
@@ -252,21 +251,21 @@ def inverse_multiply_blend(blended, known):
     final_array = np.dstack((original_array, original_alpha))
     return Image.fromarray(final_array.astype(np.uint8), 'RGBA')
 
-def inverse_screen_blend(blended, known):
+def inverse_screen_blend(blended, base_color):
     # 画像データを浮動小数点型で扱う
     blended_array = np.array(blended, dtype=np.float32) / 255
-    known_array = np.array(known, dtype=np.float32) / 255
+    base_color_array = np.array(base_color, dtype=np.float32) / 255
 
     # スクリーンブレンドの逆算式
     with np.errstate(divide='ignore', invalid='ignore'):
-        original_array = 1 - (1 - blended_array[:, :, 0:3]) / (1 - known_array[:, :, 0:3])
+        original_array = 1 - (1 - blended_array[:, :, 0:3]) / (1 - base_color_array[:, :, 0:3])
         original_array[~np.isfinite(original_array)] = 0  # 不正な値は0に置換
 
     # アルファチャンネルを保持
     original_alpha = blended_array[:, :, 3]
 
     # 未使用ピクセルを透明に設定
-    unchanged_mask = detect_unchanged_pixels(known_array, blended_array, mode='screen')
+    unchanged_mask = detect_unchanged_pixels(base_color_array, blended_array, mode='screen')
     original_array[unchanged_mask] = [1, 1, 1]
     original_alpha[unchanged_mask] = 0
 
