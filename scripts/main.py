@@ -46,7 +46,7 @@ def on_ui_tabs():
             result_screen_image = gr.Image(label="Screen Result", elem_id="screen_result", height=512, width=512)
 
         with gr.Row():
-            create_psd_button = gr.Button("Create PSD")
+            create_psd_button = gr.Button("Create PSD (Mask: Transparent where Base Color is White, Opaque where Line Art is Black)")
 
         # 進行状況表示用のコンポーネント
         progress = gr.Textbox(label="Progress", value="")
