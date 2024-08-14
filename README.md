@@ -1,7 +1,7 @@
 # sd-webui-image-blend-reverse
 [English](#english) | [日本語](#日本語)
 
-![image](https://github.com/user-attachments/assets/fe2cb955-ac93-410b-8115-7ee7db7911c9)
+![image](https://github.com/user-attachments/assets/1bbeb138-4941-4e7c-85c6-27d78ccdd5a8)
 
 ## English
 
@@ -39,7 +39,7 @@ Follow these steps to install the ImageBlendReverse extension for Stable Diffusi
 
 Note:
 - The line art should be black lines on a white background.
-- The base color should be a single color image without any shading.
+- The base color should be a single color image with a white background, without any shading.
 
 Some of the processing methods are based on the source code from https://gist.github.com/tori29umai0123/4e7781a4820727ca74e5491d67a6dff3.
 
@@ -83,7 +83,7 @@ Stable Diffusion WebUIにImageBlendReverse拡張機能をインストールす�
 
 注意：
 - 線画は白背景の黒線画を使用してください。
-- ベースカラーは陰影のない単色の画像を使用してください。
+- ベースカラーは白背景で、陰影のない単色の画像を使用してください。
 
 一部の処理は https://gist.github.com/tori29umai0123/4e7781a4820727ca74e5491d67a6dff3 のソースコードを参考にしています。
 
