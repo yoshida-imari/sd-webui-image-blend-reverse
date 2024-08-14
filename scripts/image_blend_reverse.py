@@ -35,7 +35,7 @@ def create_psd(base_color, inverse_multiply, inverse_screen, lineart, output_psd
     psd = pytoshop.core.PsdFile(num_channels=4, height=base_color.height, width=base_color.width)
 
     # 共通の関数: レイヤーの作成
-    def create_layer(image, name, blend_mode=enums.BlendMode.normal):
+    def create_layer(image, name, blend_mode=enums.BlendMode.normal, use_mask=False):
         # RGBAモードに変換（まだRGBAでない場合）
         if image.mode != 'RGBA':
             image = image.convert('RGBA')
@@ -46,19 +46,48 @@ def create_psd(base_color, inverse_multiply, inverse_screen, lineart, output_psd
         layer_g = layers.ChannelImageData(image=image_array[:, :, 1], compression=1)
         layer_b = layers.ChannelImageData(image=image_array[:, :, 2], compression=1)
 
-        return layers.LayerRecord(
-            channels={-1: layer_alpha, 0: layer_r, 1: layer_g, 2: layer_b},
+        channels = {-1: layer_alpha, 0: layer_r, 1: layer_g, 2: layer_b}
+
+        if use_mask:
+            # base_colorの白い部分（255, 255, 255）を透明にするマスクを作成
+            base_color_array = np.array(base_color)
+            mask = np.all(base_color_array[:, :, :3] == 255, axis=2).astype(np.uint8) * 255
+            mask = 255 - mask  # 反転させる（白い部分を透明に）
+
+            # lineartの黒色線画部分を不透明領域として追加
+            lineart_array = np.array(lineart.convert('L'))
+            lineart_mask = (lineart_array < 128).astype(np.uint8) * 255
+
+            # マスクを結合（ORオペレーション）
+            combined_mask = np.maximum(mask, lineart_mask)
+
+            layer_mask = layers.ChannelImageData(image=combined_mask, compression=1)
+            
+            # マスクチャンネルを追加
+            channels[-2] = layer_mask
+
+        layer = layers.LayerRecord(
+            channels=channels,
             top=0, bottom=image.height, left=0, right=image.width,
             name=name,
             opacity=255,
             blend_mode=blend_mode
         )
 
+        if use_mask:
+            # LayerMaskオブジェクトを作成（マスクデータは既にchannelsに含まれている）
+            layer.mask = layers.LayerMask(
+                top=0, left=0, bottom=image.height, right=image.width,
+                default_color=0
+            )
+
+        return layer
+
     # レイヤーの作成と追加（逆順）
     psd.layer_and_mask_info.layer_info.layer_records.extend([
         create_layer(base_color, "Base Color"),
-        create_layer(inverse_multiply, "Multiply", enums.BlendMode.multiply),
-        create_layer(inverse_screen, "Screen", enums.BlendMode.screen),
+        create_layer(inverse_multiply, "Multiply", enums.BlendMode.multiply, use_mask=True),
+        create_layer(inverse_screen, "Screen", enums.BlendMode.screen, use_mask=True),
         create_layer(lineart, "Line", enums.BlendMode.multiply)
     ])
 
