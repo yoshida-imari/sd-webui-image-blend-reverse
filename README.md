@@ -29,7 +29,7 @@ Follow these steps to install the ImageBlendReverse extension for Stable Diffusi
    ```
 5. Click the "Install" button.
 
-6. Wait for about 5 seconds. You should see a message saying "Installed into stable-diffusion-webui\extensions\sd-webui-image-blend-reverse. Use Installed tab to restart".
+6. Wait for about 60 seconds. You should see a message saying "Installed into stable-diffusion-webui\extensions\sd-webui-image-blend-reverse. Use Installed tab to restart".
 
 7. Go to the "Installed" tab, click "Check for updates", and then click "Apply and restart UI".
 
@@ -73,7 +73,7 @@ Stable Diffusion WebUIにImageBlendReverse拡張機能をインストールす�
    ```
 5. "Install"（インストール）ボタンをクリックします。
 
-6. 約5秒待ちます。"Installed into stable-diffusion-webui\extensions\sd-webui-image-blend-reverse. Use Installed tab to restart"（sd-webui-image-blend-reverseにインストールされました。Installedタブを使用して再起動してください）というメッセージが表示されるはずです。
+6. 約60秒待ちます。"Installed into stable-diffusion-webui\extensions\sd-webui-image-blend-reverse. Use Installed tab to restart"（sd-webui-image-blend-reverseにインストールされました。Installedタブを使用して再起動してください）というメッセージが表示されるはずです。
 
 7. "Installed"（インストール済み）タブに移動し、"Check for updates"（更新を確認）をクリックしてから、"Apply and restart UI"（適用してUIを再起動）をクリックします。
 
