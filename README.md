@@ -37,6 +37,26 @@ Follow these steps to install the ImageBlendReverse extension for Stable Diffusi
 
 9. Once the WebUI is back up, you should see a new tab named "ImageBlendReverse" in the interface.
 
+### Execution Procedure
+
+1. Set the result image in Blended Image or press the Reference Latest Generated Image button.
+
+2. Set a single color base color image with a white background and no shading in Base Color Image.
+
+3. Set a black line art image with a white background in Line Art.
+
+4. Adjust the Denoise Strength value. This reduces noise in the multiply and screen layer images. When the value is 0, no noise reduction is performed.
+
+5. Press the Progress Images button.
+
+6. After about 60 seconds, multiply and screen layer images will be generated.
+
+7. Press the Create PSD button. The white part of the base color will be set as a transparent area and the black area of the line art will be set as an opaque area as layer masks for multiply and screen layers.
+
+8. After about 60 seconds, when the Progress bar shows that the PSD file generation is complete, the Download PSD button will appear.
+
+9. Press Download PSD to download the layered PSD file as output.psd.
+
 Note:
 - The line art should be black lines on a white background.
 - The base color should be a single color image with a white background, without any shading.
@@ -80,6 +100,26 @@ Stable Diffusion WebUIにImageBlendReverse拡張機能をインストールす�
 8. Stable Diffusion WebUIを完全に再起動します。これには、ターミナルやコマンドプロンプトウィンドウを閉じて再度開く作業も含まれます。ターミナルに馴染みがない場合は、単にコンピューターを再起動してください。
 
 9. WebUIが再起動したら、インターフェースに"ImageBlendReverse"という新しいタブが表示されているはずです。
+
+### 実行手順
+
+1. Blended Imageに結果画像をセットするか、Reference Latest Generated Imageボタンを押してください。
+
+2. Base Color Imageに白背景で陰影のない単色のベースカラー画像をセットしてください。
+
+3. Line Artに白背景で黒色線画の画像をセットしてください。
+
+4. Denoise Strengthの値を調整して下さい。乗算とスクリーンのレイヤー画像のノイズを軽減します。値が0の時はノイズ除去を行いません。
+
+5. Progress Imagesボタンを押してください。
+
+6. 60秒ほど待つと、乗算とスクリーンのレイヤー画像が生成されます。
+
+7. Create PSDボタンを押してください。乗算とスクリーンのレイヤーマスクとして、ベースカラーの白部分が透明領域として、線画の黒領域が不透明領域として追加でセットされます。
+
+8. 60秒ほど待ちます。ProgressバーでPSDファイルが生成完了と出ると、Download PSDボタンが表示されます。
+
+9. Download PSDを押すと、output.psdとしてレイヤー分けされたPSDファイルをダウンロードします。
 
 注意：
 - 線画は白背景の黒線画を使用してください。
