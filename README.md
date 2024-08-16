@@ -117,7 +117,7 @@ Stable Diffusion WebUIにImageBlendReverse拡張機能をインストールす�
 
 7. Create PSDボタンを押してください。乗算とスクリーンのレイヤーマスクとして、ベースカラーの白部分が透明領域として、線画の黒領域が不透明領域として追加でセットされます。
 
-8. 60秒ほど待ちます。ProgressバーでPSDファイルが生成完了と出ると、Download PSDボタンが表示されます。
+8.60秒ほど待つと、ProgressバーでPSDファイルが生成完了と出力され、Download PSDボタンが表示されます。
 
 9. Download PSDを押すと、output.psdとしてレイヤー分けされたPSDファイルをダウンロードします。
 
