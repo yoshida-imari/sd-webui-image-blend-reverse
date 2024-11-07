@@ -54,27 +54,37 @@ def on_ui_tabs():
         # ダウンロードリンクを表示するためのHTML要素
         download_link = gr.HTML()
 
-        def process_images(blended, basecolor, lineart, denoise_strength=10):
+        def process_images(blended, basecolor, lineart, denoise_strength=10, progress=gr.Progress(track_tqdm=False)):
+
+            progress(0.0, desc="process images...")
+
             if not all([blended, basecolor, lineart]):
                 return [gr.Image.update(value=None), gr.Image.update(value=None)]
 
+            progress(0.1, desc="Converting input images...")
             blended = blended.convert('RGB')
             basecolor = basecolor.convert('RGBA')
             lineart = lineart.convert('L')
 
             # 画像のサイズを統一
+            progress(0.15, desc="Processing image resize...")
             basecolor_size = basecolor.size
             blended = blended.resize(basecolor_size, Image.LANCZOS)
             lineart = lineart.resize(basecolor_size, Image.LANCZOS)
             
             # 処理の実行
+            progress(0.25, desc="Processing line removal...")
             post_line_removal = process_post_line_removal(blended, lineart)
+            progress(0.4, desc="Converting to RGBA...")
             post_line_removal = convert_rgb_to_rgba(post_line_removal)
+            progress(0.6, desc="Processing multiply layer...")
             result_multiply = inverse_multiply_blend(post_line_removal, basecolor)
+            progress(0.8, desc="Processing screen layer...")
             result_screen = inverse_screen_blend(post_line_removal, basecolor)
 
             # ノイズ除去
             if denoise_strength > 0:
+                progress(0.9, desc="Applying denoise to layers...")
                 result_multiply = denoise_image(result_multiply, denoise_strength)
                 result_screen = denoise_image(result_screen, denoise_strength)
 
@@ -86,6 +96,8 @@ def on_ui_tabs():
                 'screen': result_screen,
                 'lineart': lineart
             }
+
+            progress(1.0, desc="Processing complete!")
 
             # 両方の結果を返す
             return [result_multiply, result_screen]
